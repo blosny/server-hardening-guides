@@ -1,7 +1,7 @@
 ---
 - name: Sunucu Zırhlama Operasyonu
-  hosts: all              # Bu senaryo tüm tanımlı sunucularda çalışsın
-  become: true            # Komutları 'root' yetkisiyle (sudo) çalıştır
+  hosts: "{{ target_hosts | default('hardening_targets') }}" # Target specific hosts, default to 'hardening_targets'
+  become: true # Execute commands with sudo
   
   roles:
-    - server_hardening    # Az önce yazdığımız rolü kullan
+    - server_hardening # Use the hardening role defined earlier

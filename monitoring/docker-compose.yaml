@@ -1,18 +1,18 @@
 version: "3.8"
 
 services:
-  # LOKI: Loglarımızın toplandığı ana depo
+  # LOKI: Main log repository
   loki:
-    image: grafana/loki:latest
+    image: grafana/loki:3.1.0
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
     networks:
       - monitoring
 
-  # PROMTAIL: Logları Loki'ye gönderen postacı
+  # PROMTAIL: Agent that sends logs to Loki
   promtail:
-    image: grafana/promtail:latest
+    image: grafana/promtail:3.1.0
     volumes:
       - /var/log:/var/log
       - ./promtail-config.yaml:/etc/promtail/config.yaml
@@ -20,13 +20,13 @@ services:
     networks:
       - monitoring
 
-  # GRAFANA: Görselleştirme paneli
+  # GRAFANA: Visualization dashboard
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:11.1.0
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:?GRAFANA_ADMIN_PASSWORD must be set in your .env file}
     networks:
       - monitoring
 
